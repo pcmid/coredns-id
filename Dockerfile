@@ -12,6 +12,12 @@ RUN --mount=type=cache,target=/go \
 FROM docker.io/debian:stable-slim AS run_env
 WORKDIR /
 
+RUN apt-get update \
+    && apt-get install -y ca-certificates \
+    && apt-get clean autoclean \
+    && apt-get autoremove --yes \
+    && rm -rf /var/lib/{apt,dpkg,cache,log}/ 
+
 # copy binary
 COPY --from=build_env /build/coredns/coredns /coredns
 
